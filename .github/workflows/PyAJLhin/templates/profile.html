@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}โปรไฟล์ & แก้ไขข้อมูลของฉัน{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <!-- ส่วนหัวหน้า -->
+    <div class="mb-6 sm:mb-8">
+        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-800 flex items-center space-x-2.5 sm:space-x-3">
+            <span>👤</span>
+            <span>โปรไฟล์ & ข้อมูลส่วนตัว</span>
+        </h1>
+        <p class="text-slate-500 text-xs sm:text-sm mt-1">จัดการข้อมูลบัญชีผู้ใช้งาน และประวัติการจองอีเว้นท์บาสเกตบอลของคุณ</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <!-- ฝั่งซ้าย: สรุปข้อมูลโปรไฟล์ & สิทธิ์ -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-3xl shadow-xs border border-sky-100 p-5 sm:p-6 text-center">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-gradient-to-tr from-cheero-400 to-cheero-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-md shadow-sky-200 uppercase mb-3 sm:mb-4">
+                    {{ current_user.username[0] }}
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800">{{ current_user.fullname or current_user.username }}</h3>
+                <p class="text-xs text-cheero-500 font-semibold mt-0.5">@{{ current_user.username }}</p>
+                <div class="mt-2.5">
+                    {% if current_user.role == 'admin' %}
+                        <span class="inline-flex items-center text-[11px] sm:text-xs font-semibold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                            👑 ผู้ดูแลระบบ (Admin)
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center text-[11px] sm:text-xs font-semibold text-cheero-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+                            👤 สมาชิกทั่วไป (Member)
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="mt-5 pt-5 border-t border-sky-50 text-left space-y-2.5 text-sm">
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">อีเมลติดต่อ:</span>
+                        <span class="text-slate-700 font-medium truncate block text-xs">{{ current_user.email }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">เบอร์โทรศัพท์:</span>
+                        <span class="text-slate-700 font-medium text-xs">{{ current_user.phone or '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">วันที่สมัครสมาชิก:</span>
+                        <span class="text-slate-700 font-medium text-xs">{{ current_user.created_at[:16] or '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- กล่องสลับโหมดทดสอบ Admin สไตล์พาสเทลมินิมอล -->
+            <div class="bg-sky-50/70 text-slate-700 rounded-3xl p-5 border border-sky-100 shadow-xs">
+                <h4 class="text-xs font-bold text-cheero-700 uppercase tracking-wider mb-1.5">🛠️ โหมดทดสอบสิทธิ์ระบบ</h4>
+                <p class="text-xs text-slate-500 mb-3 leading-relaxed">
+                    ปัจจุบันบัญชีนี้มีสิทธิ์: <b>{{ current_user.role }}</b><br>
+                    (สามารถสลับสิทธิ์เพื่อทดสอบหน้าต่างแอดมินคอนเฟิร์มคิวได้ทันที)
+                </p>
+                <form method="POST" action="/profile">
+                    <input type="hidden" name="action" value="toggle_role">
+                    <button type="submit" class="w-full text-xs font-semibold py-2.5 px-3 rounded-2xl {% if current_user.role == 'admin' %}bg-white hover:bg-slate-50 text-slate-700 border border-slate-200{% else %}bg-cheero-500 hover:bg-cheero-600 text-white shadow-xs{% endif %} transition">
+                        {% if current_user.role == 'admin' %}
+                            สลับเป็น สมาชิกทั่วไป (User Mode)
+                        {% else %}
+                            สลับเป็น ผู้ดูแลระบบ (Admin Mode) 👑
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ฝั่งขวา: ฟอร์มแก้ไขข้อมูล -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- ฟอร์มที่ 1: แก้ไขข้อมูลทั่วไป -->
+            <div class="bg-white rounded-3xl shadow-xs border border-sky-100 p-5 sm:p-7 lg:p-8">
+                <h3 class="text-base font-bold text-slate-800 mb-5 sm:mb-6 flex items-center space-x-2">
+                    <span>✏️</span>
+                    <span>แก้ไขข้อมูลส่วนตัว</span>
+                </h3>
+
+                <form method="POST" action="/profile" class="space-y-4">
+                    <input type="hidden" name="action" value="update_profile">
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">ชื่อผู้ใช้ (Username):</label>
+                        <input type="text" value="{{ current_user.username }}" disabled 
+                               class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-400 text-xs sm:text-sm cursor-not-allowed">
+                        <span class="text-[10px] sm:text-[11px] text-slate-400 mt-1 block">ชื่อผู้ใช้ไม่สามารถเปลี่ยนแปลงได้</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">ชื่อ-นามสกุล / ชื่อทีม:</label>
+                        <input type="text" name="fullname" value="{{ current_user.fullname or '' }}" required
+                               class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition"
+                               placeholder="เช่น นายสมชาย นักบาส หรือ ทีม Slam Dunkers">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">เบอร์โทรศัพท์ติดต่อ:</label>
+                            <input type="tel" name="phone" value="{{ current_user.phone or '' }}"
+                                   class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition"
+                                   placeholder="เช่น 081-234-5678">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">อีเมลติดต่อ (Email):</label>
+                            <input type="email" name="email" value="{{ current_user.email }}" required
+                                   class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="pt-3 flex justify-end">
+                        <button type="submit" class="w-full sm:w-auto bg-cheero-500 hover:bg-cheero-600 text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-2xl shadow-xs shadow-cheero-200 transition text-center">
+                            บันทึกข้อมูลส่วนตัว
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ฟอร์มที่ 2: เปลี่ยนรหัสผ่าน -->
+            <div class="bg-white rounded-3xl shadow-xs border border-sky-100 p-5 sm:p-7 lg:p-8">
+                <h3 class="text-base font-bold text-slate-800 mb-5 sm:mb-6 flex items-center space-x-2">
+                    <span>🔒</span>
+                    <span>เปลี่ยนรหัสผ่าน</span>
+                </h3>
+
+                <form method="POST" action="/profile" class="space-y-4">
+                    <input type="hidden" name="action" value="change_password">
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">รหัสผ่านปัจจุบัน:</label>
+                        <input type="password" name="current_password" required
+                               class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition"
+                               placeholder="กรอกรหัสผ่านปัจจุบันเพื่อยืนยัน">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">รหัสผ่านใหม่:</label>
+                            <input type="password" name="new_password" required minlength="4"
+                                   class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition"
+                                   placeholder="รหัสผ่านใหม่อย่างน้อย 4 ตัว">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">ยืนยันรหัสผ่านใหม่:</label>
+                            <input type="password" name="confirm_password" required minlength="4"
+                                   class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition"
+                                   placeholder="กรอกรหัสผ่านใหม่อีกครั้ง">
+                        </div>
+                    </div>
+
+                    <div class="pt-3 flex justify-end">
+                        <button type="submit" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-2xl transition text-center">
+                            อัปเดตรหัสผ่านใหม่
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

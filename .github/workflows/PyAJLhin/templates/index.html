@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}หน้าแรก - บริการจัดงานแข่งขันบาสเกตบอลครบวงจร{% endblock %}
+
+{% block content %}
+<!-- ================= HERO SECTION (CHEERO SKY-BLUE STYLE, RESPONSIVE) ================= -->
+<section class="relative bg-gradient-to-b from-sky-50 via-white to-cheero-softbg py-12 sm:py-20 lg:py-24 overflow-hidden border-b border-sky-100 grid-pattern">
+    <!-- วงกลมแสงสีฟ้าและชมพูนุ่มนวลสไตล์ Cheero -->
+    <div class="absolute -top-24 -right-24 w-64 sm:w-80 h-64 sm:h-80 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-64 sm:w-80 h-64 sm:h-80 bg-pink-100/40 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <!-- ป้ายแท็กแบบแคปซูลสไตล์ Cheero -->
+        <div class="inline-flex items-center space-x-2 bg-sky-100/80 border border-sky-200/60 px-3.5 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold text-cheero-700 mb-5 sm:mb-6 shadow-xs max-w-full truncate">
+            <span class="w-2 h-2 rounded-full bg-cheero-500 animate-pulse flex-shrink-0"></span>
+            <span class="truncate">🏀 BASKETBALL EVENT BOOKING PLATFORM</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-800 tracking-tight leading-snug sm:leading-tight max-w-4xl mx-auto px-1">
+            จัดงานแข่งขันบาสเกตบอลได้ง่ายๆ<br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cheero-500 via-sky-500 to-blue-600 block sm:inline mt-1 sm:mt-0">
+                สะดวก รวดเร็ว มาตรฐานระดับสากล
+            </span>
+        </h1>
+
+        <p class="mt-4 sm:mt-5 text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed px-2">
+            แพลตฟอร์มจองแพ็กเกจจัดงานแข่งขันและทัวร์นาเมนต์บาสเกตบอลแบบครบวงจร 
+            สนามมาตรฐาน FIBA กรรมการมืออาชีพ พร้อมระบบเช็กคิวว่างแบบเรียลไทม์
+        </p>
+
+        <!-- ปุ่มกด Call to Action แบบ Rounded Pill ชิดขอบและขยายเต็มจอบนมือถือ -->
+        <div class="mt-7 sm:mt-8 flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto">
+            <a href="#packages" class="w-full sm:w-auto px-7 py-3.5 bg-cheero-500 hover:bg-cheero-600 text-white font-bold rounded-2xl shadow-md shadow-cheero-200 transition transform hover:-translate-y-0.5 text-xs sm:text-sm text-center">
+                🏆 เลือกแพ็กเกจจัดงาน
+            </a>
+            <a href="#calendar-check" class="w-full sm:w-auto px-7 py-3.5 bg-white hover:bg-sky-50 text-cheero-600 font-bold rounded-2xl border border-sky-200 shadow-xs transition text-xs sm:text-sm text-center">
+                📅 เช็กสถานะวันว่าง
+            </a>
+        </div>
+
+        <!-- แถบสถิติความน่าเชื่อถือ สไตล์การ์ดขาวคลีนๆ 4 ใบ ปรับขนาดพอดีทุกจอ -->
+        <div class="mt-10 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-left">
+            <div class="bg-white/90 backdrop-blur border border-sky-100 p-3.5 sm:p-4 rounded-2xl shadow-xs">
+                <div class="text-lg sm:text-xl font-bold text-cheero-500">FIBA</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 mt-0.5">สนามแข่งขันมาตรฐานสากล</div>
+            </div>
+            <div class="bg-white/90 backdrop-blur border border-sky-100 p-3.5 sm:p-4 rounded-2xl shadow-xs">
+                <div class="text-lg sm:text-xl font-bold text-sky-500">100%</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 mt-0.5">กรรมการตัดสินมีใบอนุญาต</div>
+            </div>
+            <div class="bg-white/90 backdrop-blur border border-sky-100 p-3.5 sm:p-4 rounded-2xl shadow-xs">
+                <div class="text-lg sm:text-xl font-bold text-blue-500">FULL HD</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 mt-0.5">ระบบ Live Stream สด</div>
+            </div>
+            <div class="bg-white/90 backdrop-blur border border-sky-100 p-3.5 sm:p-4 rounded-2xl shadow-xs">
+                <div class="text-lg sm:text-xl font-bold text-emerald-500">REAL-TIME</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 mt-0.5">คอนเฟิร์มคิววันว่างทันใจ</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= AVAILABILITY CHECKER SECTION ================= -->
+<section id="calendar-check" class="py-12 sm:py-16 bg-white border-b border-sky-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8 sm:mb-10">
+            <span class="text-[10px] sm:text-xs font-bold text-cheero-600 bg-sky-50 px-3 py-1.5 rounded-full border border-sky-200 uppercase">
+                CALENDAR & AVAILABILITY
+            </span>
+            <h2 class="text-xl sm:text-3xl font-bold text-slate-800 mt-2 sm:mt-3">ตรวจสอบสถานะคิววันว่างสำหรับการจัดงาน</h2>
+            <p class="text-slate-500 text-xs sm:text-sm mt-1 sm:mt-1.5 max-w-xl mx-auto px-2">
+                เลือกวันที่ต้องการจัดแข่งขัน เพื่อดูว่าสนามว่างพร้อมรับการจองของคุณหรือไม่
+            </p>
+        </div>
+
+        <div class="bg-cheero-softbg border border-sky-100 rounded-3xl p-5 sm:p-8 shadow-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center">
+                <!-- เครื่องมือเลือกวันที่เพื่อเช็ก -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                        เลือกวันที่ต้องการตรวจสอบ:
+                    </label>
+                    <div class="flex flex-col sm:flex-row gap-2.5">
+                        <input type="date" id="checkDateInput" class="w-full sm:flex-1 px-4 py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 bg-white text-xs sm:text-sm outline-none">
+                        <button type="button" id="checkDateBtn" class="w-full sm:w-auto bg-cheero-500 hover:bg-cheero-600 text-white font-bold px-6 py-3 rounded-2xl transition shadow-xs text-xs sm:text-sm text-center">
+                            เช็กสถานะ
+                        </button>
+                    </div>
+
+                    <!-- กล่องแสดงผลลัพธ์การตรวจสอบ -->
+                    <div id="checkResult" class="mt-4 p-4 rounded-2xl border border-sky-200 bg-white hidden shadow-xs">
+                        <div class="flex items-center space-x-3">
+                            <span id="resultIcon" class="text-2xl flex-shrink-0"></span>
+                            <div>
+                                <h4 id="resultTitle" class="font-bold text-xs sm:text-sm text-slate-800"></h4>
+                                <p id="resultDesc" class="text-xs text-slate-500 mt-0.5 leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- รายการวันที่จัดงานล่าสุดที่มีการยืนยันแล้ว -->
+                <div class="border-t md:border-t-0 md:border-l border-sky-100 pt-5 md:pt-0 md:pl-6 lg:pl-8">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 sm:mb-3">
+                        📌 วันที่ได้รับการคอนเฟิร์มแล้ว (คิวเต็ม):
+                    </h4>
+                    {% if booked_dates %}
+                        <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                            {% for b in booked_dates %}
+                            <div class="flex items-center justify-between text-xs p-2.5 sm:p-3 bg-white rounded-xl border border-sky-100 shadow-xs">
+                                <div class="flex items-center space-x-2 truncate">
+                                    <span class="w-2 h-2 rounded-full bg-rose-400 flex-shrink-0"></span>
+                                    <span class="font-bold text-slate-800 truncate">{{ b.event_date }}</span>
+                                    <span class="text-slate-400 truncate text-[11px]">({{ b.package_name }})</span>
+                                </div>
+                                <span class="bg-rose-50 text-rose-600 font-semibold px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] border border-rose-100 flex-shrink-0 ml-2">
+                                    คิวเต็ม
+                                </span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="p-5 text-center text-xs text-slate-400 bg-white rounded-2xl border border-sky-100">
+                            ยังไม่มีคิวงานที่ถูกจองในขณะนี้ สนามว่างทุกวัน!
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= EVENT PACKAGES SECTION ================= -->
+<section id="packages" class="py-14 sm:py-20 bg-cheero-softbg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 sm:mb-16">
+            <span class="text-[10px] sm:text-xs font-bold text-cheero-600 bg-sky-100 px-3.5 py-1.5 rounded-full border border-sky-200 uppercase">
+                PACKAGES & PRICING
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-800 mt-2 sm:mt-3">แพ็กเกจจัดงานแข่งขันบาสเกตบอล</h2>
+            <p class="text-slate-500 text-xs sm:text-sm mt-1 sm:mt-1.5 max-w-xl mx-auto px-2">
+                เลือกขนาดงานที่เหมาะสมกับองค์กรของคุณ พร้อมเลือกออพชั่นเสริมได้ในขั้นตอนถัดไป
+            </p>
+        </div>
+
+        <!-- Grid 3 แพ็กเกจ ปรับอัตราส่วนเป๊ะทุกขนาดหน้าจอ -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {% for key, pkg in packages.items() %}
+            <div class="bg-white rounded-3xl shadow-xs hover:shadow-lg transition-all duration-300 border {% if key == 'medium' %}border-cheero-400 ring-2 ring-cheero-200/50 relative{% else %}border-sky-100{% endif %} flex flex-col justify-between overflow-hidden">
+                
+                {% if key == 'medium' %}
+                <div class="bg-cheero-500 text-white text-center py-1.5 text-[11px] sm:text-xs font-bold tracking-wider uppercase">
+                    ⭐ แนะนำ: ยอดนิยมสำหรับองค์กร
+                </div>
+                {% elif key == 'large' %}
+                <div class="bg-amber-400 text-slate-900 text-center py-1.5 text-[11px] sm:text-xs font-bold tracking-wider uppercase">
+                    👑 ทัวร์นาเมนต์ชิงรางวัลใหญ่
+                </div>
+                {% endif %}
+
+                <div class="p-6 sm:p-7 lg:p-8 flex-1 flex flex-col">
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-2">{{ pkg.name }}</h3>
+                    <p class="text-slate-500 text-xs sm:text-sm mb-5 sm:mb-6 leading-relaxed">{{ pkg.description }}</p>
+
+                    <div class="mb-5 sm:mb-6 pb-5 sm:pb-6 border-b border-sky-50">
+                        <span class="text-slate-400 text-[11px] block">ราคาเริ่มต้น</span>
+                        <div class="flex items-baseline space-x-1 mt-0.5">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-cheero-600">฿{{ "{:,}".format(pkg.price) }}</span>
+                            <span class="text-slate-400 text-xs">/ งาน</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-3">สิ่งที่จะได้รับในแพ็กเกจ:</span>
+                        <ul class="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-slate-600 mb-6">
+                            {% for feature in pkg.features %}
+                            <li class="flex items-start space-x-2">
+                                <span class="text-cheero-500 font-bold flex-shrink-0">✓</span>
+                                <span>{{ feature }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="p-5 sm:p-6 bg-sky-50/40 border-t border-sky-50">
+                    <a href="/book/{{ key }}" class="block text-center w-full py-3 sm:py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm transition {% if key == 'medium' %}bg-cheero-500 hover:bg-cheero-600 text-white shadow-xs shadow-cheero-200{% else %}bg-slate-800 hover:bg-slate-700 text-white{% endif %}">
+                        เลือกแพ็กเกจนี้ & เพิ่มออพชั่น ⚙️
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= STANDARDS & QUALITY ================= -->
+<section id="standards" class="py-14 sm:py-20 bg-white border-b border-sky-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 sm:mb-16">
+            <span class="text-[10px] sm:text-xs font-bold text-cheero-600 bg-sky-50 px-3.5 py-1.5 rounded-full border border-sky-200 uppercase">
+                OUR STANDARDS
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-800 mt-2 sm:mt-3">มาตรฐานการจัดการแข่งขันที่คุณวางใจได้</h2>
+            <p class="text-slate-500 text-xs sm:text-sm mt-1 sm:mt-1.5 max-w-xl mx-auto px-2">
+                เราใส่ใจในทุกรายละเอียดตั้งแต่พื้นสนาม กรรมการตัดสิน ไปจนถึงความปลอดภัยของนักกีฬา
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div class="p-5 sm:p-6 rounded-3xl bg-cheero-softbg border border-sky-100 text-center hover:shadow-xs transition">
+                <span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-100 text-cheero-500 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3.5 sm:mb-4 shadow-xs">
+                    🏟️
+                </span>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">สนามมาตรฐาน FIBA</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    พื้นสนามไม้ปาร์เก้ลดแรงกระแทก ห่วงสปริงมาตรฐาน และไฟส่องสว่างระดับแข่งขัน
+                </p>
+            </div>
+
+            <div class="p-5 sm:p-6 rounded-3xl bg-cheero-softbg border border-sky-100 text-center hover:shadow-xs transition">
+                <span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-100 text-cheero-500 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3.5 sm:mb-4 shadow-xs">
+                    👨‍⚖️
+                </span>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">กรรมการสมาคมฯ</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ทีมงานผู้ตัดสินที่มีใบอนุญาต ควบคุมการแข่งขันอย่างยุติธรรม พร้อมโต๊ะบันทึกคะแนน
+                </p>
+            </div>
+
+            <div class="p-5 sm:p-6 rounded-3xl bg-cheero-softbg border border-sky-100 text-center hover:shadow-xs transition">
+                <span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-100 text-cheero-500 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3.5 sm:mb-4 shadow-xs">
+                    🎥
+                </span>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">Live Streaming</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ถ่ายทอดสดหลายมุมกล้อง คมชัด Full HD พร้อมกราฟิกสกอร์บอร์ดสดแบบมืออาชีพ
+                </p>
+            </div>
+
+            <div class="p-5 sm:p-6 rounded-3xl bg-cheero-softbg border border-sky-100 text-center hover:shadow-xs transition">
+                <span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-100 text-rose-500 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3.5 sm:mb-4 shadow-xs">
+                    🏥
+                </span>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">ทีมพยาบาล & ความปลอดภัย</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ชุดปฐมพยาบาลเบื้องต้น อุปกรณ์กู้ชีพ AED และทีมงานดูแลเหตุฉุกเฉินตลอดการแข่งขัน
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= 3 EASY STEPS ================= -->
+<section id="steps" class="py-14 sm:py-20 bg-cheero-softbg">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 sm:mb-16">
+            <span class="text-[10px] sm:text-xs font-bold text-cheero-600 bg-sky-100 px-3.5 py-1.5 rounded-full border border-sky-200 uppercase">
+                HOW IT WORKS
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2 sm:mt-3">3 ขั้นตอนง่ายๆ ในการจัดงาน</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 text-center relative">
+            <div class="bg-white p-5 sm:p-6 rounded-3xl border border-sky-100 shadow-xs">
+                <div class="w-11 h-11 sm:w-12 sm:h-12 bg-sky-100 text-cheero-600 font-extrabold text-base sm:text-lg rounded-2xl flex items-center justify-center mx-auto mb-3.5 sm:mb-4">
+                    1
+                </div>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">เลือกแพ็กเกจ & ออพชั่น</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    เลือกไซส์งานที่ต้องการ ใส่วันที่ และเลือกออพชั่นเสริม เช่น เพิ่มกรรมการ หรือระบบถ่ายทอดสด
+                </p>
+            </div>
+
+            <div class="bg-white p-5 sm:p-6 rounded-3xl border border-sky-100 shadow-xs">
+                <div class="w-11 h-11 sm:w-12 sm:h-12 bg-cheero-500 text-white font-extrabold text-base sm:text-lg rounded-2xl flex items-center justify-center mx-auto mb-3.5 sm:mb-4 shadow-xs">
+                    2
+                </div>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">ผู้จัดคอนเฟิร์มสถานะคิว</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ผู้จัดจะตรวจสอบตารางงานในระบบ SQLite และคอนเฟิร์มว่าวันที่ดังกล่าว "ว่าง" หรือ "เต็ม" ทันที
+                </p>
+            </div>
+
+            <div class="bg-white p-5 sm:p-6 rounded-3xl border border-sky-100 shadow-xs">
+                <div class="w-11 h-11 sm:w-12 sm:h-12 bg-sky-100 text-cheero-600 font-extrabold text-base sm:text-lg rounded-2xl flex items-center justify-center mx-auto mb-3.5 sm:mb-4">
+                    3
+                </div>
+                <h4 class="font-bold text-slate-800 mb-1.5 text-sm sm:text-base">แข่งขันอย่างสมบูรณ์แบบ</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ทีมงานจัดเตรียมสนาม อุปกรณ์ กรรมการ พร้อมสำหรับการแข่งขันจริงของคุณ
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('checkDateBtn').addEventListener('click', function() {
+        const dateVal = document.getElementById('checkDateInput').value;
+        const resultBox = document.getElementById('checkResult');
+        const icon = document.getElementById('resultIcon');
+        const title = document.getElementById('resultTitle');
+        const desc = document.getElementById('resultDesc');
+
+        if (!dateVal) {
+            alert('กรุณาเลือกวันที่ต้องการตรวจสอบ');
+            return;
+        }
+
+        fetch(`/api/check-date?date=${encodeURIComponent(dateVal)}`)
+            .then(res => res.json())
+            .then(data => {
+                resultBox.classList.remove('hidden');
+                if (data.status === 'confirmed') {
+                    resultBox.className = 'mt-4 p-4 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800';
+                    icon.textContent = '❌';
+                    title.textContent = `วันที่ ${dateVal} มีการจัดงานแล้ว (คิวเต็ม)`;
+                    desc.textContent = 'ขออภัย วันที่นี้ได้รับการยืนยันการจัดงานแล้ว กรุณาเลือกวันอื่นสำหรับการแข่งขันของคุณ';
+                } else if (data.status === 'pending') {
+                    resultBox.className = 'mt-4 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-800';
+                    icon.textContent = '⏳';
+                    title.textContent = `วันที่ ${dateVal} มีการขอจองเข้ามา (รอการตรวจสอบ)`;
+                    desc.textContent = 'มีผู้ขอจองไว้แล้วแต่ยังไม่ได้รับการอนุมัติ หากต้องการจองซ้ำกรุณาติดต่อผู้จัด';
+                } else {
+                    resultBox.className = 'mt-4 p-4 rounded-2xl border border-sky-200 bg-sky-50 text-cheero-700';
+                    icon.textContent = '✅';
+                    title.textContent = `วันที่ ${dateVal} สนามว่างพร้อมให้บริการ!`;
+                    desc.textContent = 'คุณสามารถเลือกแพ็กเกจแล้วดำเนินการจองในวันนี้ได้ทันที';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    });
+</script>
+{% endblock %}

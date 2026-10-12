@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}ปรับแต่งออพชั่น & ยืนยันการจอง - {{ package.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-3 sm:px-6 py-6 sm:py-12">
+    <div class="bg-white p-5 sm:p-8 lg:p-10 rounded-3xl shadow-sm border border-sky-100">
+        <!-- ป้ายหัวข้อ -->
+        <div class="border-b border-sky-50 pb-5 sm:pb-6 mb-5 sm:mb-6">
+            <span class="text-[10px] sm:text-xs font-bold text-cheero-600 bg-sky-50 px-3 py-1 rounded-full border border-sky-200 uppercase">
+                STEP 2 OF 2: CUSTOMIZE & BOOK
+            </span>
+            <h2 class="text-xl sm:text-3xl font-extrabold text-slate-800 mt-2 sm:mt-3">⚙️ ปรับแต่งออพชั่นและจองอีเว้นท์</h2>
+            <div class="mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <span class="text-sm sm:text-base font-bold text-slate-700">{{ package.name }}</span>
+                <span class="text-lg sm:text-xl font-extrabold text-cheero-600">฿{{ "{:,}".format(package.price) }}</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">{{ package.description }}</p>
+        </div>
+
+        <form method="POST" class="space-y-5 sm:space-y-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    📅 วันที่ต้องการจัดงานแข่งขัน: <span class="text-rose-500">*</span>
+                </label>
+                <input type="date" name="event_date" required id="bookingDateInput"
+                       class="w-full px-4 py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 bg-sky-50/20 text-xs sm:text-sm outline-none transition">
+                <p class="text-[11px] text-slate-400 mt-1.5">
+                    * เมื่อส่งคำขอจองแล้ว ผู้จัดจะตรวจสอบตารางงานในระบบ SQLite เพื่อคอนเฟิร์มว่าวันที่นี้ "ว่าง" หรือ "เต็ม"
+                </p>
+            </div>
+
+            <div class="border-t border-sky-50 pt-5 sm:pt-6">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
+                    ⚙️ เลือกออพชั่นเสริมเพิ่มเติม (อุปกรณ์ & ทีมงาน):
+                </label>
+                <div class="space-y-2.5 sm:space-y-3">
+                    <label class="flex items-start space-x-3 p-3 sm:p-3.5 rounded-2xl border border-sky-100 hover:border-cheero-300 bg-sky-50/30 hover:bg-sky-50/60 transition cursor-pointer">
+                        <input type="checkbox" name="options" value="ref_extra" data-price="1500" class="option-check mt-1 h-4 w-4 text-cheero-500 rounded border-sky-300 focus:ring-cheero-400 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="font-bold text-xs sm:text-sm text-slate-800">เพิ่มกรรมการตัดสินเสริม</span>
+                                <span class="text-xs font-extrabold text-cheero-600 flex-shrink-0">+1,500 บ.</span>
+                            </div>
+                            <span class="text-[11px] sm:text-xs text-slate-500 block mt-0.5">เพิ่มผู้ตัดสิน 1 ท่าน ควบคุมเกมละเอียด</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start space-x-3 p-3 sm:p-3.5 rounded-2xl border border-sky-100 hover:border-cheero-300 bg-sky-50/30 hover:bg-sky-50/60 transition cursor-pointer">
+                        <input type="checkbox" name="options" value="live_stream" data-price="3000" class="option-check mt-1 h-4 w-4 text-cheero-500 rounded border-sky-300 focus:ring-cheero-400 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="font-bold text-xs sm:text-sm text-slate-800">Live Streaming Full HD</span>
+                                <span class="text-xs font-extrabold text-cheero-600 flex-shrink-0">+3,000 บ.</span>
+                            </div>
+                            <span class="text-[11px] sm:text-xs text-slate-500 block mt-0.5">ถ่ายทอดสด FB / YT สกอร์บอร์ดมืออาชีพ</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start space-x-3 p-3 sm:p-3.5 rounded-2xl border border-sky-100 hover:border-cheero-300 bg-sky-50/30 hover:bg-sky-50/60 transition cursor-pointer">
+                        <input type="checkbox" name="options" value="water_snack" data-price="1000" class="option-check mt-1 h-4 w-4 text-cheero-500 rounded border-sky-300 focus:ring-cheero-400 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="font-bold text-xs sm:text-sm text-slate-800">ชุดน้ำดื่ม & อาหารว่าง</span>
+                                <span class="text-xs font-extrabold text-cheero-600 flex-shrink-0">+1,000 บ.</span>
+                            </div>
+                            <span class="text-[11px] sm:text-xs text-slate-500 block mt-0.5">บริการน้ำดื่มลังและเกลือแร่สำหรับทุกทีม</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    💬 หมายเหตุเพิ่มเติมถึงผู้จัด (ถ้ามี):
+                </label>
+                <textarea name="note" rows="3" class="w-full px-4 py-2.5 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 bg-sky-50/20 text-xs sm:text-sm outline-none transition" placeholder="เช่น ขอเริ่มคู่แรกช่วง 10:00 น. ..."></textarea>
+            </div>
+
+            <!-- กล่องสรุปราคารวม สีฟ้า Cheero สดใส นุ่มนวล -->
+            <div class="bg-gradient-to-r from-cheero-500 to-sky-600 text-white p-4 sm:p-5 rounded-2xl flex items-center justify-between shadow-md shadow-cheero-200">
+                <div>
+                    <span class="text-[11px] sm:text-xs text-sky-100 block">ราคารวมประมาณการ</span>
+                    <span class="text-[10px] sm:text-xs text-sky-200">(แพ็กเกจ + ออพชั่นเสริม)</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold">
+                    ฿<span id="displayTotalPrice">{{ "{:,}".format(package.price) }}</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col-reverse sm:flex-row items-center gap-2.5 sm:gap-3 pt-2">
+                <a href="/" class="w-full sm:w-auto px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition text-center text-xs sm:text-sm">
+                    ยกเลิก
+                </a>
+                <button type="submit" class="w-full sm:flex-1 bg-cheero-500 hover:bg-cheero-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-xs shadow-cheero-200 transition text-center text-xs sm:text-sm">
+                    ยืนยันการส่งคำขอจอง 📋
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const basePrice = {{ package.price }};
+    const checkboxes = document.querySelectorAll('.option-check');
+    const displayTotal = document.getElementById('displayTotalPrice');
+
+    function calculateTotal() {
+        let extra = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                extra += parseInt(cb.getAttribute('data-price') || 0);
+            }
+        });
+        const total = basePrice + extra;
+        displayTotal.textContent = total.toLocaleString();
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', calculateTotal));
+</script>
+{% endblock %}
