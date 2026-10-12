@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}สมัครสมาชิก (ยืนยัน OTP อีเมล){% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-3 sm:px-6 py-10 sm:py-16">
+    <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border border-sky-100">
+        <div class="text-center mb-6 sm:mb-8">
+            <span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-100 text-cheero-500 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-2.5 sm:mb-3 shadow-xs">
+                📝
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">สมัครสมาชิก</h2>
+            <p class="text-xs text-slate-400 mt-1">ระบบยืนยันตัวตน 2 ชั้นด้วยรหัส OTP ทางอีเมล</p>
+        </div>
+
+        {% if step == 1 %}
+        <form method="POST" class="space-y-4">
+            <input type="hidden" name="action" value="request_otp">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">ชื่อผู้ใช้ (Username):</label>
+                <input type="text" name="username" required 
+                       class="w-full px-4 py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition bg-sky-50/20"
+                       placeholder="เช่น basketball_king">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">รหัสผ่าน (Password):</label>
+                <input type="password" name="password" required 
+                       class="w-full px-4 py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition bg-sky-50/20"
+                       placeholder="อย่างน้อย 4 ตัวอักษร">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">อีเมล (สำหรับรับรหัส OTP):</label>
+                <input type="email" name="email" required 
+                       class="w-full px-4 py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-xs sm:text-sm outline-none transition bg-sky-50/20"
+                       placeholder="your_email@example.com">
+                <span class="text-[10px] sm:text-[11px] text-slate-400 mt-1 block">ระบบจะส่งรหัส OTP 6 หลักไปยังอีเมลนี้</span>
+            </div>
+            <button type="submit" class="w-full bg-cheero-500 hover:bg-cheero-600 text-white font-bold py-3.5 rounded-2xl transition shadow-xs shadow-cheero-200 text-xs sm:text-sm mt-2">
+                ส่งรหัส OTP ไปยังอีเมล 📧
+            </button>
+        </form>
+        {% elif step == 2 %}
+        <form method="POST" class="space-y-4 sm:space-y-5">
+            <input type="hidden" name="action" value="verify_otp">
+            <div class="bg-sky-50/80 p-3.5 sm:p-4 rounded-2xl border border-sky-200 text-xs text-cheero-700">
+                ระบบได้ส่งรหัส 6 หลักไปยังอีเมล <b>{{ email }}</b> แล้ว กรุณากรอกรหัสด้านล่างเพื่อยืนยัน:
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 text-center">รหัส OTP 6 หลัก:</label>
+                <input type="text" name="otp" maxlength="6" required autofocus
+                       class="w-full text-center tracking-[0.4em] sm:tracking-[0.5em] text-xl sm:text-2xl font-bold font-mono py-3 border border-sky-200 rounded-2xl focus:ring-2 focus:ring-cheero-400 text-cheero-600 outline-none transition bg-sky-50/20">
+            </div>
+            <button type="submit" class="w-full bg-cheero-500 hover:bg-cheero-600 text-white font-bold py-3.5 rounded-2xl transition shadow-xs shadow-cheero-200 text-xs sm:text-sm">
+                ยืนยันรหัส OTP และสร้างบัญชี 🎉
+            </button>
+            <div class="text-center pt-1">
+                <a href="/register" class="text-xs text-slate-400 hover:text-cheero-500 underline">
+                    ← แก้ไขข้อมูล / ขอรหัส OTP ใหม่
+                </a>
+            </div>
+        </form>
+        {% endif %}
+
+        <div class="mt-6 pt-5 border-t border-sky-50 text-center text-xs text-slate-500">
+            มีบัญชีผู้ใช้งานอยู่แล้ว? 
+            <a href="/login" class="text-cheero-500 font-bold hover:underline">เข้าสู่ระบบ</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

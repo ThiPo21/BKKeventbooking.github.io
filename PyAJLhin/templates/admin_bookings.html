@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}ระบบจัดการคิวจองและคอนเฟิร์มสถานะ (Admin Dashboard){% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-10">
+    <!-- ส่วนหัวหน้า Admin (Responsive stack on mobile) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div>
+            <div class="inline-flex items-center space-x-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 mb-1.5 sm:mb-2">
+                <span>🛡️ ADMIN MANAGEMENT PANEL</span>
+            </div>
+            <h1 class="text-xl sm:text-3xl font-extrabold text-slate-800">ระบบจัดการและยืนยันการจองอีเว้นท์</h1>
+            <p class="text-slate-500 text-xs sm:text-sm mt-1">ตรวจสอบคิวงานแข่งขัน คอนเฟิร์มสถานะ (ว่าง / เต็ม) และใส่หมายเหตุตอบกลับผู้จัด</p>
+        </div>
+        <div class="flex items-center space-x-2 flex-shrink-0">
+            <a href="/" class="w-full sm:w-auto text-center bg-white hover:bg-sky-50 text-cheero-600 border border-sky-200 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-2xl shadow-xs transition">
+                ← กลับหน้าแรก
+            </a>
+        </div>
+    </div>
+
+    <!-- แผงสถิติสรุป (Stats Overview) ปรับ Grid 2 คอลัมน์บนมือถือ 4 คอลัมน์บนไอแพดและคอม -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div class="bg-white p-4 sm:p-5 rounded-3xl border border-sky-100 shadow-xs">
+            <span class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase">การจองทั้งหมด</span>
+            <div class="text-xl sm:text-2xl font-extrabold text-slate-800 mt-1">{{ stats.total }} <span class="text-xs font-normal text-slate-400">รายการ</span></div>
+        </div>
+        <div class="bg-amber-50/70 p-4 sm:p-5 rounded-3xl border border-amber-200/60 shadow-xs">
+            <span class="text-[11px] sm:text-xs text-amber-700 font-semibold uppercase">⏳ รอตรวจสอบ</span>
+            <div class="text-xl sm:text-2xl font-extrabold text-amber-800 mt-1">{{ stats.pending }} <span class="text-xs font-normal text-amber-600">รายการ</span></div>
+        </div>
+        <div class="bg-emerald-50/70 p-4 sm:p-5 rounded-3xl border border-emerald-200/60 shadow-xs">
+            <span class="text-[11px] sm:text-xs text-emerald-700 font-semibold uppercase">✅ คอนเฟิร์ม (ว่าง)</span>
+            <div class="text-xl sm:text-2xl font-extrabold text-emerald-800 mt-1">{{ stats.confirmed }} <span class="text-xs font-normal text-emerald-600">รายการ</span></div>
+        </div>
+        <div class="bg-rose-50/70 p-4 sm:p-5 rounded-3xl border border-rose-200/60 shadow-xs">
+            <span class="text-[11px] sm:text-xs text-rose-700 font-semibold uppercase">❌ ปฏิเสธ (เต็ม)</span>
+            <div class="text-xl sm:text-2xl font-extrabold text-rose-800 mt-1">{{ stats.rejected }} <span class="text-xs font-normal text-rose-600">รายการ</span></div>
+        </div>
+    </div>
+
+    <!-- ตารางรายการการจองทั้งหมด พร้อมรองรับ Swipe Scroll บนมือถือและไอแพด -->
+    <div class="bg-white rounded-3xl border border-sky-100 shadow-xs overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-sky-50 flex items-center justify-between bg-sky-50/20">
+            <h3 class="font-bold text-slate-800 flex items-center space-x-2 text-xs sm:text-base">
+                <span>📋</span>
+                <span>รายการจองทั้งหมดในฐานข้อมูล SQLite</span>
+            </h3>
+            <span class="text-[11px] sm:text-xs text-cheero-600 font-medium">อัปเดตเรียลไทม์</span>
+        </div>
+
+        <!-- แถบแนะนำการเลื่อนบนหน้าจอมือถือ -->
+        <div class="block lg:hidden px-4 py-2 bg-sky-50/60 border-b border-sky-100 text-[11px] text-cheero-700 font-medium flex items-center space-x-1">
+            <span>👉</span>
+            <span>สามารถเลื่อนซ้าย-ขวาเพื่อดูข้อมูลและกดคอนเฟิร์มสถานะ</span>
+        </div>
+
+        {% if bookings %}
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left text-xs sm:text-sm text-slate-600 min-w-[700px]">
+                    <thead class="bg-sky-50/40 text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-sky-100">
+                        <tr>
+                            <th class="py-3.5 px-4">#ID</th>
+                            <th class="py-3.5 px-4">วันที่จัดงาน</th>
+                            <th class="py-3.5 px-4">ผู้จอง / อีเมล</th>
+                            <th class="py-3.5 px-4">แพ็กเกจ & ออพชั่น</th>
+                            <th class="py-3.5 px-4">ยอดรวม</th>
+                            <th class="py-3.5 px-4">สถานะปัจจุบัน</th>
+                            <th class="py-3.5 px-4 text-center min-w-[200px]">การดำเนินการ (คอนเฟิร์ม ว่าง / เต็ม)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-sky-50">
+                        {% for b in bookings %}
+                        <tr class="hover:bg-sky-50/30 transition {% if b.status == 'pending' %}bg-amber-50/20{% endif %}">
+                            <td class="py-4 px-4 font-mono font-bold text-cheero-500">#{{ b.id }}</td>
+                            <td class="py-4 px-4">
+                                <span class="font-bold text-slate-800 block text-xs sm:text-sm">{{ b.event_date }}</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-400">จองเมื่อ: {{ b.created_at[:16] }}</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="font-bold text-slate-800 text-xs sm:text-sm">{{ b.user_fullname or b.username }}</div>
+                                <div class="text-[11px] sm:text-xs text-cheero-500 font-medium">@{{ b.username }}</div>
+                                <div class="text-[10px] sm:text-xs text-slate-400 mt-0.5">📧 {{ b.user_email }}</div>
+                                {% if b.user_phone %}
+                                <div class="text-[10px] sm:text-xs text-slate-400">📞 {{ b.user_phone }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="font-bold text-slate-800 block text-xs sm:text-sm">{{ b.package_name }}</span>
+                                {% if b.options_list %}
+                                    <div class="mt-1 space-y-0.5">
+                                        {% for opt in b.options_list %}
+                                            <span class="inline-block bg-sky-50 text-cheero-700 text-[10px] sm:text-[11px] px-2 py-0.5 rounded-md border border-sky-100 font-medium">
+                                                + {{ opt }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-[11px] text-slate-400">ไม่มีออพชั่นเสริม</span>
+                                {% endif %}
+                                {% if b.note %}
+                                    <div class="text-[11px] text-slate-500 mt-2 bg-sky-50/30 p-2 rounded-xl border border-sky-100">
+                                        <b>หมายเหตุ:</b> {{ b.note }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="text-sm sm:text-base font-extrabold text-cheero-600">฿{{ "{:,}".format(b.total_price) }}</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                {% if b.status == 'confirmed' %}
+                                    <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                        ✅ ยืนยันแล้ว (ว่าง)
+                                    </span>
+                                {% elif b.status == 'rejected' %}
+                                    <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
+                                        ❌ ปฏิเสธ (คิวเต็ม)
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 animate-pulse">
+                                        ⏳ รอการตรวจสอบ
+                                    </span>
+                                {% endif %}
+                                {% if b.admin_note %}
+                                    <div class="text-[11px] text-slate-500 mt-1 italic">
+                                        โน้ต: "{{ b.admin_note }}"
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex flex-col space-y-1.5 max-w-xs mx-auto">
+                                    <form method="POST" action="/admin/bookings" class="space-y-1.5">
+                                        <input type="hidden" name="action" value="update_status">
+                                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+
+                                        <input type="text" name="admin_note" value="{{ b.admin_note or '' }}" 
+                                               placeholder="ใส่โน้ตตอบกลับผู้จอง..."
+                                               class="w-full px-2.5 py-1.5 text-xs border border-sky-200 rounded-xl focus:ring-1 focus:ring-cheero-400 outline-none">
+
+                                        <div class="flex space-x-1.5">
+                                            <button type="submit" name="new_status" value="confirmed" 
+                                                    class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl shadow-xs transition">
+                                                ✅ ว่าง (อนุมัติ)
+                                            </button>
+                                            <button type="submit" name="new_status" value="rejected" 
+                                                    class="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl shadow-xs transition">
+                                                ❌ เต็ม (ปฏิเสธ)
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <form method="POST" action="/admin/bookings" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการจอง #{{ b.id }} นี้?');" class="text-right">
+                                        <input type="hidden" name="action" value="delete_booking">
+                                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                                        <button type="submit" class="text-[10px] text-slate-400 hover:text-rose-500 underline">
+                                            🗑️ ลบรายการนี้
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="p-10 sm:p-12 text-center text-slate-400">
+                <span class="text-4xl block mb-2">📭</span>
+                <p class="font-medium text-slate-700 text-sm sm:text-base">ยังไม่มีรายการจองอีเว้นท์เข้ามาในระบบ</p>
+                <p class="text-xs text-slate-400 mt-1">เมื่อมีสมาชิกกดจองแพ็กเกจ ข้อมูลจะปรากฏที่นี่เพื่อให้คุณคอนเฟิร์มสถานะคิวงาน</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

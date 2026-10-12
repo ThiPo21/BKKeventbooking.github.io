@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}ประวัติการจองของฉัน{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div>
+            <h1 class="text-xl sm:text-3xl font-extrabold text-slate-800 flex items-center space-x-2.5 sm:space-x-3">
+                <span>📋</span>
+                <span>ประวัติการจองอีเว้นท์ของฉัน</span>
+            </h1>
+            <p class="text-slate-500 text-xs sm:text-sm mt-1">ติดตามสถานะการจอง วันที่จัดงาน และการคอนเฟิร์มคิวจากผู้จัด</p>
+        </div>
+        <a href="/#packages" class="w-full sm:w-auto bg-cheero-500 hover:bg-cheero-600 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-xs shadow-cheero-200 transition text-center">
+            + จองแพ็กเกจใหม่
+        </a>
+    </div>
+
+    {% if bookings %}
+        <div class="space-y-4">
+            {% for b in bookings %}
+            <div class="bg-white rounded-3xl border border-sky-100 p-4 sm:p-6 shadow-xs hover:shadow-md transition">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-sky-50 pb-3.5 sm:pb-4 mb-3.5 sm:mb-4">
+                    <div>
+                        <span class="text-[10px] sm:text-[11px] font-mono font-bold text-cheero-500 bg-sky-50 px-2 py-0.5 rounded-md">#BOOKING-{{ b.id }}</span>
+                        <h3 class="text-base sm:text-xl font-bold text-slate-800 mt-1">{{ b.package_name }}</h3>
+                    </div>
+                    <div>
+                        {% if b.status == 'confirmed' %}
+                            <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                                ✅ ยืนยันแล้ว (วันที่ว่าง)
+                            </span>
+                        {% elif b.status == 'rejected' %}
+                            <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+                                ❌ คิวเต็มในวันนี้ (ไม่ว่าง)
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center text-[11px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 animate-pulse">
+                                ⏳ รอผู้จัดตรวจสอบคิวงาน
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 text-sm mb-4">
+                    <div class="bg-cheero-softbg p-3 sm:p-3.5 rounded-2xl border border-sky-50">
+                        <span class="text-[11px] text-slate-400 block mb-0.5">📅 วันที่จัดงานแข่งขัน:</span>
+                        <span class="font-bold text-slate-800 text-sm sm:text-base">{{ b.event_date }}</span>
+                    </div>
+                    <div class="bg-cheero-softbg p-3 sm:p-3.5 rounded-2xl border border-sky-50">
+                        <span class="text-[11px] text-slate-400 block mb-0.5">💰 ยอดชำระสุทธิ:</span>
+                        <span class="font-bold text-cheero-600 text-sm sm:text-base">฿{{ "{:,}".format(b.total_price) }}</span>
+                    </div>
+                    <div class="bg-cheero-softbg p-3 sm:p-3.5 rounded-2xl border border-sky-50">
+                        <span class="text-[11px] text-slate-400 block mb-0.5">🕒 วันที่ทำรายการ:</span>
+                        <span class="font-medium text-slate-600 text-xs">{{ b.created_at[:16] }}</span>
+                    </div>
+                </div>
+
+                <!-- รายละเอียดออพชั่น -->
+                <div class="text-xs text-slate-600 mb-3">
+                    <span class="font-bold text-slate-700">⚙️ ออพชั่นเสริมที่เลือก:</span>
+                    {% if b.options_list %}
+                        <div class="mt-1 flex flex-wrap gap-1.5">
+                            {% for opt in b.options_list %}
+                                <span class="bg-sky-50 text-cheero-700 px-2.5 py-0.5 sm:py-1 rounded-lg border border-sky-100 text-[11px] sm:text-xs font-medium">
+                                    + {{ opt }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <span class="text-slate-400 ml-1">ไม่มีออพชั่นเสริม</span>
+                    {% endif %}
+                </div>
+
+                {% if b.note %}
+                <div class="text-xs text-slate-500 bg-sky-50/40 p-3 rounded-2xl border border-sky-50 mb-3">
+                    <b>💬 หมายเหตุของคุณ:</b> {{ b.note }}
+                </div>
+                {% endif %}
+
+                <!-- ข้อความตอบกลับจากแอดมิน (ถ้ามี) -->
+                {% if b.admin_note %}
+                <div class="text-xs p-3.5 rounded-2xl border {% if b.status == 'confirmed' %}bg-emerald-50 text-emerald-800 border-emerald-200{% elif b.status == 'rejected' %}bg-rose-50 text-rose-800 border-rose-200{% else %}bg-amber-50 text-amber-800 border-amber-200{% endif %}">
+                    <b>📢 ข้อความจากผู้จัดงาน:</b> {{ b.admin_note }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white rounded-3xl border border-sky-100 p-8 sm:p-12 text-center shadow-xs">
+            <span class="text-4xl sm:text-5xl block mb-3">🏀</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-800">คุณยังไม่มีรายการจองในขณะนี้</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                เริ่มต้นสร้างทัวร์นาเมนต์บาสเกตบอลของคุณได้ง่ายๆ เลือกดูแพ็กเกจแล้วจองวันได้เลย!
+            </p>
+            <div class="mt-5 sm:mt-6">
+                <a href="/#packages" class="inline-block bg-cheero-500 hover:bg-cheero-600 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-xs transition">
+                    ดูแพ็กเกจจัดงานทั้งหมด
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

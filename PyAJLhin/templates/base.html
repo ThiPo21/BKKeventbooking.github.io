@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}ระบบจองจัดงานแข่งขันบาสเกตบอล{% endblock %} | Slam Pro</title>
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        cheero: {
+                            50: '#F0F9FF',
+                            100: '#E0F2FE',
+                            200: '#BAE6FD',
+                            300: '#7DD3FC',
+                            400: '#38BDF8',
+                            500: '#1D8AF2', // Bright Sky Blue สไตล์ Cheero
+                            600: '#0284C7',
+                            700: '#0369A1',
+                            coral: '#FB7185',
+                            softbg: '#F6FAFD',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #F8FAFD;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .grid-pattern {
+            background-size: 24px 24px;
+            background-image: 
+                linear-gradient(to right, rgba(29, 138, 242, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(29, 138, 242, 0.04) 1px, transparent 1px);
+        }
+        /* ล็อกไม่ให้หลุดขอบจอบนมือถือ */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-cheero-softbg text-slate-800 flex flex-col min-h-screen antialiased overflow-x-hidden selection:bg-sky-200 selection:text-cheero-700">
+
+    <!-- ================= NAVBAR (RESPONSIVE FOR ALL SCREENS) ================= -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-xs">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-18">
+                <!-- ฝั่งซ้าย: ปุ่ม Menu Burger 3 ขีด + โลโก้ -->
+                <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                    <!-- ปุ่ม Menu Burger 3 ขีด -->
+                    <button id="drawerToggle" type="button" 
+                            class="p-2 sm:p-2.5 rounded-2xl text-slate-600 hover:text-cheero-500 hover:bg-sky-50 focus:outline-none focus:ring-2 focus:ring-cheero-400 transition cursor-pointer flex-shrink-0"
+                            aria-label="เปิดเมนูหลัก" title="เปิดเมนู">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- โลโก้แบรนด์ -->
+                    <a href="/" class="flex items-center space-x-2 sm:space-x-2.5 group min-w-0">
+                        <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-gradient-to-tr from-cheero-400 to-cheero-500 flex items-center justify-center text-white text-sm sm:text-base shadow-xs shadow-cheero-300 group-hover:scale-105 transition flex-shrink-0">
+                            🏀
+                        </span>
+                        <div class="truncate">
+                            <span class="text-base sm:text-lg font-bold tracking-tight text-slate-800 block leading-tight truncate">SLAM PRO</span>
+                            <span class="text-[9px] sm:text-[10px] tracking-wider text-cheero-500 uppercase font-semibold hidden xs:block">Tournament Arena</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- เมนูกลาง (สำหรับ Desktop & iPad หน้าจอแนวนอน) -->
+                <nav class="hidden lg:flex items-center space-x-1 text-sm font-medium text-slate-600">
+                    <a href="/" class="px-3.5 py-2 rounded-xl hover:text-cheero-500 hover:bg-sky-50/80 transition">หน้าแรก</a>
+                    <a href="/#packages" class="px-3.5 py-2 rounded-xl hover:text-cheero-500 hover:bg-sky-50/80 transition">แพ็กเกจจัดงาน</a>
+                    <a href="/#calendar-check" class="px-3.5 py-2 rounded-xl hover:text-cheero-500 hover:bg-sky-50/80 transition">เช็กวันว่าง</a>
+                    <a href="/#standards" class="px-3.5 py-2 rounded-xl hover:text-cheero-500 hover:bg-sky-50/80 transition">มาตรฐานสนาม</a>
+                    {% if current_user %}
+                        <a href="/my-bookings" class="px-3.5 py-2 rounded-xl hover:text-cheero-500 hover:bg-sky-50/80 transition">
+                            การจองของฉัน
+                        </a>
+                        {% if current_user.role == 'admin' %}
+                        <a href="/admin/bookings" class="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition flex items-center space-x-1 text-xs font-semibold">
+                            <span>🛡️ จัดการคิวงาน</span>
+                        </a>
+                        {% endif %}
+                    {% endif %}
+                </nav>
+
+                <!-- ฝั่งขวา: โปรไฟล์ หรือ ปุ่ม Login/Register (จัดวางพอดีทุกขนาดหน้าจอ) -->
+                <div class="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+                    {% if current_user %}
+                        <a href="/profile" class="flex items-center space-x-1.5 sm:space-x-2 bg-sky-50 hover:bg-sky-100/80 px-2.5 sm:px-3 py-1.5 rounded-full border border-sky-100 transition">
+                            <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-cheero-500 flex items-center justify-center text-[11px] sm:text-xs font-bold text-white uppercase shadow-xs">
+                                {{ current_user.username[0] }}
+                            </span>
+                            <span class="text-xs sm:text-sm font-semibold text-slate-700 hidden sm:inline max-w-[100px] truncate">{{ current_user.username }}</span>
+                            {% if current_user.role == 'admin' %}
+                                <span class="bg-amber-400 text-slate-900 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full">ADMIN</span>
+                            {% endif %}
+                        </a>
+                        <a href="/logout" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 sm:px-3 py-1.5 rounded-full border border-rose-200 transition font-medium">
+                            ออก
+                        </a>
+                    {% else %}
+                        <a href="/login" class="text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl font-medium text-slate-600 hover:text-cheero-500 hover:bg-sky-50 transition">
+                            เข้าสู่ระบบ
+                        </a>
+                        <a href="/register" class="text-xs sm:text-sm px-3.5 sm:px-4 py-2 rounded-full font-semibold bg-cheero-500 hover:bg-cheero-600 text-white shadow-xs shadow-cheero-200 transition">
+                            สมัครสมาชิก
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= OFF-CANVAS DRAWER (SIDEBAR ซ้ายมือ สไลด์พอดีทุกจอ) ================= -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs z-40 hidden transition-opacity opacity-0 duration-300 cursor-pointer"></div>
+
+    <aside id="drawerPanel" 
+           class="fixed top-0 bottom-0 left-0 w-[84vw] max-w-xs sm:w-80 bg-white text-slate-800 z-50 shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-sky-100">
+        
+        <!-- ส่วนหัว Drawer -->
+        <div class="p-4 sm:p-5 border-b border-sky-50 flex items-center justify-between bg-sky-50/30">
+            <div class="flex items-center space-x-2.5">
+                <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cheero-400 to-cheero-500 flex items-center justify-center text-sm shadow-xs text-white">
+                    🏀
+                </span>
+                <span class="font-bold text-slate-800 tracking-wide text-base">เมนูหลัก</span>
+            </div>
+            <button id="drawerClose" type="button" 
+                    class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-sky-50 transition focus:outline-none"
+                    aria-label="ปิดเมนู">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- กล่องข้อมูลโปรไฟล์ผู้ใช้งานใน Drawer -->
+        <div class="p-4 sm:p-5 border-b border-sky-100 bg-gradient-to-br from-sky-50/70 via-sky-50/30 to-white">
+            {% if current_user %}
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-cheero-400 to-cheero-500 flex items-center justify-center text-white text-base sm:text-lg font-bold shadow-md shadow-sky-200 uppercase flex-shrink-0">
+                        {{ current_user.username[0] }}
+                    </div>
+                    <div class="overflow-hidden min-w-0">
+                        <h4 class="font-bold text-slate-800 truncate text-sm sm:text-base">{{ current_user.fullname or current_user.username }}</h4>
+                        <p class="text-xs text-cheero-500 font-medium truncate">@{{ current_user.username }}</p>
+                        <p class="text-[11px] text-slate-400 truncate mt-0.5">{{ current_user.email }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-sky-100">
+                    <div>
+                        {% if current_user.role == 'admin' %}
+                            <span class="inline-flex items-center text-[10px] sm:text-[11px] font-semibold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">
+                                👑 แอดมิน (Admin)
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center text-[10px] sm:text-[11px] font-semibold text-cheero-700 bg-sky-100 px-2.5 py-0.5 rounded-full border border-sky-200">
+                                👤 สมาชิกทั่วไป
+                            </span>
+                        {% endif %}
+                    </div>
+                    <a href="/profile" class="text-xs text-cheero-500 hover:text-cheero-600 font-semibold flex items-center space-x-1 hover:underline">
+                        <span>แก้ไขข้อมูล</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            {% else %}
+                <div class="text-center py-2">
+                    <div class="w-11 h-11 mx-auto rounded-2xl bg-sky-100 flex items-center justify-center text-lg mb-2 text-cheero-500 shadow-xs">
+                        👤
+                    </div>
+                    <p class="text-sm font-bold text-slate-800">ยังไม่ได้เข้าสู่ระบบ</p>
+                    <p class="text-xs text-slate-500 mt-1 mb-3">เข้าสู่ระบบเพื่อจองอีเว้นท์และติดตามสถานะ</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="/login" class="text-xs bg-white hover:bg-slate-50 text-slate-700 font-semibold py-2 rounded-xl text-center border border-slate-200 transition">เข้าสู่ระบบ</a>
+                        <a href="/register" class="text-xs bg-cheero-500 hover:bg-cheero-600 text-white font-semibold py-2 rounded-xl text-center shadow-xs transition">สมัครสมาชิก</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- รายการเมนูนำทางใน Drawer -->
+        <nav class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-1 text-sm">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-1">เมนูหลัก</div>
+            
+            <a href="/" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">🏠</span>
+                <span>หน้าแรก</span>
+            </a>
+
+            <a href="/#packages" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">🏆</span>
+                <span>แพ็กเกจจัดงานแข่งขัน</span>
+            </a>
+
+            <a href="/#calendar-check" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">📅</span>
+                <span>ตรวจสอบสถานะวันว่าง</span>
+            </a>
+
+            <a href="/#standards" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">⭐</span>
+                <span>มาตรฐานงาน & จุดเด่น</span>
+            </a>
+
+            <a href="/#steps" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">📌</span>
+                <span>ขั้นตอนการจอง</span>
+            </a>
+
+            <div class="pt-3 pb-1">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-1">บริการสมาชิก</div>
+            </div>
+
+            {% if current_user %}
+                <a href="/my-bookings" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                    <span class="text-base sm:text-lg">📋</span>
+                    <span>ประวัติการจองของฉัน</span>
+                </a>
+
+                <a href="/profile" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                    <span class="text-base sm:text-lg">⚙️</span>
+                    <span>แก้ไขข้อมูลตัวเอง</span>
+                </a>
+
+                {% if current_user.role == 'admin' %}
+                    <div class="pt-3 pb-1">
+                        <div class="text-[10px] font-bold text-amber-600 uppercase tracking-wider px-3 py-1">ระบบผู้ดูแล (Admin)</div>
+                    </div>
+                    <a href="/admin/bookings" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition">
+                        <span class="text-base sm:text-lg">🛡️</span>
+                        <div>
+                            <span class="font-bold block leading-tight">จัดการคิวจอง</span>
+                            <span class="text-[10px] text-amber-600 font-normal">คอนเฟิร์มสถานะ ว่าง/เต็ม</span>
+                        </div>
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="/login" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                    <span class="text-base sm:text-lg">🔐</span>
+                    <span>เข้าสู่ระบบ</span>
+                </a>
+                <a href="/register" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                    <span class="text-base sm:text-lg">📝</span>
+                    <span>สมัครสมาชิก (OTP เมลล์)</span>
+                </a>
+            {% endif %}
+
+            <div class="pt-3 pb-1">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-1">ติดต่อเรา</div>
+            </div>
+
+            <a href="/#contact" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-cheero-500 font-medium transition">
+                <span class="text-base sm:text-lg">📞</span>
+                <span>ช่องทางติดต่อ & แผนที่</span>
+            </a>
+        </nav>
+
+        <!-- ส่วนท้าย Drawer -->
+        <div class="p-3 sm:p-4 border-t border-sky-100 bg-sky-50/40">
+            {% if current_user %}
+                <a href="/logout" class="flex items-center justify-center space-x-2 w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs sm:text-sm font-semibold border border-rose-200 transition">
+                    <span>🚪</span>
+                    <span>ออกจากระบบ</span>
+                </a>
+            {% else %}
+                <div class="text-center text-[11px] text-slate-400">
+                    Slam Pro Arena © 2026<br>Simple & Modern Sports Booking
+                </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- ================= FLASH MESSAGES ================= -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-3 p-3.5 sm:p-4 rounded-2xl flex items-start space-x-3 shadow-xs {% if category == 'error' %}bg-rose-50 text-rose-800 border border-rose-200{% elif category == 'success' %}bg-emerald-50 text-emerald-800 border border-emerald-200{% elif category == 'info' %}bg-sky-50 text-cheero-700 border border-sky-200{% else %}bg-amber-50 text-amber-800 border border-amber-200{% endif %}">
+                        <span class="text-base sm:text-lg flex-shrink-0">
+                            {% if category == 'error' %}⚠️{% elif category == 'success' %}✅{% else %}ℹ️{% endif %}
+                        </span>
+                        <div class="flex-1 text-xs sm:text-sm font-medium">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-1 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ================= FOOTER (RESPONSIVE FOR ALL SCREENS) ================= -->
+    <footer class="bg-white text-slate-600 border-t border-sky-100 mt-16 sm:mt-20 pt-10 sm:pt-14 pb-8 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <!-- Col 1: About -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-center space-x-2.5 mb-3">
+                        <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cheero-400 to-cheero-500 flex items-center justify-center text-white text-sm shadow-xs">
+                            🏀
+                        </span>
+                        <div>
+                            <span class="text-base font-bold tracking-tight text-slate-800 block">SLAM PRO ARENA</span>
+                            <span class="text-[9px] tracking-wider text-cheero-500 uppercase font-semibold">Event Management</span>
+                        </div>
+                    </div>
+                    <p class="text-xs leading-relaxed text-slate-500">
+                        บริการจัดงานแข่งขันและทัวร์นาเมนต์บาสเกตบอลครบวงจร สนามมาตรฐาน FIBA สะดวก รวดเร็ว สบายตา พร้อมระบบคอนเฟิร์มคิวงานทันสมัย
+                    </p>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">เมนูลัด</h4>
+                    <ul class="space-y-2 text-xs text-slate-500">
+                        <li><a href="/" class="hover:text-cheero-500 transition">หน้าแรก</a></li>
+                        <li><a href="/#packages" class="hover:text-cheero-500 transition">แพ็กเกจจัดงาน</a></li>
+                        <li><a href="/#calendar-check" class="hover:text-cheero-500 transition">เช็กสถานะวันว่าง</a></li>
+                        <li><a href="/#standards" class="hover:text-cheero-500 transition">มาตรฐานและกรรมการ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Member & Admin -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">บริการสมาชิก</h4>
+                    <ul class="space-y-2 text-xs text-slate-500">
+                        <li><a href="/my-bookings" class="hover:text-cheero-500 transition">ประวัติการจอง</a></li>
+                        <li><a href="/profile" class="hover:text-cheero-500 transition">โปรไฟล์ & แก้ไขข้อมูล</a></li>
+                        {% if current_user and current_user.role == 'admin' %}
+                        <li><a href="/admin/bookings" class="text-amber-600 hover:text-amber-700 font-semibold transition">🛡️ จัดการคิวจอง (Admin)</a></li>
+                        {% else %}
+                        <li><a href="/login" class="hover:text-cheero-500 transition">เข้าสู่ระบบ</a></li>
+                        <li><a href="/register" class="hover:text-cheero-500 transition">สมัครสมาชิกใหม่</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Col 4: Contact -->
+                <div id="contact">
+                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">ติดต่อประสานงาน</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-2">
+                        📍 อาคารกีฬาในร่ม Slam Pro Arena<br>
+                        กรุงเทพมหานคร และปริมณฑล
+                    </p>
+                    <p class="text-xs text-slate-500 mb-1">
+                        📞 สายด่วน: 081-234-5678
+                    </p>
+                    <p class="text-xs text-slate-500 truncate">
+                        ✉️ basketballeventbooking@gmail.com
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-sky-100 text-center text-[11px] text-slate-400 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+                <p>© 2026 Slam Pro Basketball Event Booking. Minimal & Friendly Edition</p>
+                <p>ฐานข้อมูล SQLite (.db) พร้อมระบบ OTP Gmail</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT: DRAWER BURGER MENU ================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('drawerToggle');
+            const closeBtn = document.getElementById('drawerClose');
+            const overlay = document.getElementById('drawerOverlay');
+            const panel = document.getElementById('drawerPanel');
+
+            function openDrawer() {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    panel.classList.remove('-translate-x-full');
+                }, 10);
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeDrawer() {
+                overlay.classList.add('opacity-0');
+                panel.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }, 300);
+            }
+
+            if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+            if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+            if (overlay) overlay.addEventListener('click', closeDrawer);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !panel.classList.contains('-translate-x-full')) {
+                    closeDrawer();
+                }
+            });
+        });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
